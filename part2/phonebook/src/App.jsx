@@ -1,35 +1,10 @@
 import {useEffect, useState} from 'react'
-import axios from "axios";
+import Filter from "./component/Filter.jsx";
+import PersonForm from "./component/PersonForm.jsx";
+import Persons from "./component/Person.jsx";
+import phonebook from "./service/phonebook.js";
 
-const personsdb = []
-const Filter = ({filterValue, onFilterChange}) => {
-    return <p>filter shown with <input onChange={onFilterChange} value={filterValue}/></p>
-}
-
-const PersonForm = ({
-                        newNameInputValue,
-                        onNewNameInputValueChange,
-                        newNumberInputValue,
-                        onNewNumberInputValueChange,
-                        onSubmit
-                    }) => {
-    return <form>
-        <div>
-            name: <input onChange={onNewNameInputValueChange} value={newNameInputValue}/>
-        </div>
-        <div>
-            number: <input onChange={onNewNumberInputValueChange} value={newNumberInputValue}/>
-        </div>
-        <div>
-            <button type="submit" onClick={onSubmit}>add</button>
-        </div>
-    </form>
-}
-
-const Persons = ({persons}) => {
-    return persons.map((person) => <p key={person.name}>{person.name} {person.number}</p>)
-
-}
+let personsdb = []
 
 const App = () => {
     const [persons, setPersons] = useState([...personsdb])
@@ -57,25 +32,49 @@ const App = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         if (persons.findIndex((p) => p.name === newName.trim()) >= 0) {
-            alert(`${newName} is already added to phonebook`)
+            if (confirm(`${newName} is already added to phonebook, replace the old number with a new one`)) {
+                const updatedPerson = personsdb.find(p => p.name === newName)
+                updatedPerson.number = newNumber
+                phonebook.update(updatedPerson).then(
+                    (data) => {
+                        personsdb = personsdb.filter(p => p.id === data.id ? data : p)
+                        setPersons([...personsdb])
+                        setNewName("")
+                        setNewNumber("")
+                        setSearch("")
+                    }
+                )
+            }
             return
         }
-        personsdb.push({name: newName.trim(), number: newNumber.trim(), id: personsdb.length + 1})
-        setPersons([...personsdb])
-        setNewName("")
-        setNewNumber("")
-        setSearch("")
+
+        phonebook.add({name: newName.trim(), number: newNumber.trim()}).then(
+            (data) => {
+                personsdb.push(data)
+                setPersons([...personsdb])
+                setNewName("")
+                setNewNumber("")
+                setSearch("")
+            }
+        )
     }
 
     useEffect(() => {
-        axios.get("http://localhost:3001/persons").then(
-            response => {
-                personsdb.concat(response.data)
-                setPersons([...response.data])
-            }
-        )
+        phonebook.initData().then(data => {
+            personsdb = personsdb.concat(data)
+            setPersons([...personsdb])
+        })
     }, [])
 
+    const handleDelete = (e) => {
+        phonebook.deleteItem(e.target.getAttribute("data-id"))
+            .then(data => {
+                personsdb = personsdb.filter(p => p.id === data.id ? null : p)
+                setPersons([...personsdb])
+                setSearch("")
+            })
+            .catch(() => alert("This record does not exist on server!"))
+    }
     return (
         <>
             <h2>Phonebook</h2>
@@ -85,7 +84,7 @@ const App = () => {
                         onNewNameInputValueChange={handleTypeName}
                         onNewNumberInputValueChange={handleTypeNumber} onSubmit={handleSubmit}></PersonForm>
             <h3>Numbers</h3>
-            <Persons persons={persons}></Persons>
+            <Persons persons={persons} onClick={handleDelete}></Persons>
         </>
     )
 }
