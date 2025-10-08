@@ -1,0 +1,22 @@
+.message {
+    padding: 8px;
+    border: 4px solid;
+    border-radius: 4px;
+    background-color: #efecec;
+    font-size: 20px;
+}
+
+.message p {
+    margin: 0;
+    padding: 0;
+}
+
+.success {
+    border-color: green;
+    color: green;
+}
+
+.error {
+    border-color: red;
+    color: red;
+}

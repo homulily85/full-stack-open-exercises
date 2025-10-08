@@ -3,6 +3,8 @@ import Filter from "./component/Filter.jsx";
 import PersonForm from "./component/PersonForm.jsx";
 import Persons from "./component/Person.jsx";
 import phonebook from "./service/phonebook.js";
+import SuccessMessage from "./component/SuccessMessage.jsx";
+import ErrorMessage from "./component/ErrorMessage.jsx";
 
 let personsdb = []
 
@@ -11,6 +13,8 @@ const App = () => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [search, setSearch] = useState('')
+    const [success, setSuccess] = useState("")
+    const [error, setError] = useState("")
 
     const handleTypeName = (e) => {
         setNewName(e.target.value)
@@ -42,6 +46,8 @@ const App = () => {
                         setNewName("")
                         setNewNumber("")
                         setSearch("")
+                        setSuccess(`Changed number for ${data.name}`)
+                        setTimeout(() => setSuccess(""), 5000)
                     }
                 )
             }
@@ -55,6 +61,8 @@ const App = () => {
                 setNewName("")
                 setNewNumber("")
                 setSearch("")
+                setSuccess(`Added ${data.name}`)
+                setTimeout(() => setSuccess(""), 5000)
             }
         )
     }
@@ -72,12 +80,19 @@ const App = () => {
                 personsdb = personsdb.filter(p => p.id === data.id ? null : p)
                 setPersons([...personsdb])
                 setSearch("")
+                setSuccess(`Deleted ${data.name}`)
+                setTimeout(() => setSuccess(""), 5000)
             })
-            .catch(() => alert("This record does not exist on server!"))
+            .catch(() => {
+                setError("This record does not exist on server!")
+                setTimeout(() => setError(""), 5000)
+            })
     }
     return (
         <>
             <h2>Phonebook</h2>
+            <SuccessMessage message={success}></SuccessMessage>
+            <ErrorMessage message={error}></ErrorMessage>
             <Filter filterValue={search} onFilterChange={handleSearchType}></Filter>
             <h3>add a new</h3>
             <PersonForm newNameInputValue={newName} newNumberInputValue={newNumber}
