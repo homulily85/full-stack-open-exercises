@@ -1,5 +1,6 @@
 const Filter = ({filterValue, onFilterChange}) => {
-    return <p>filter shown with <input onChange={onFilterChange} value={filterValue}/></p>
-}
+  return <p>filter shown with <input onChange={onFilterChange}
+                                     value={filterValue}/></p>;
+};
 
-export default Filter
+export default Filter;
