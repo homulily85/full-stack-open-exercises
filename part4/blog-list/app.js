@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const config = require('./utils/config')
 const notesRouter = require('./controller/blog')
 const logger = require('./utils/logger')
+const {errorHandler} = require('./utils/middleware')
 
 const app = express()
 
@@ -38,5 +39,7 @@ app.use(morgan('tiny', {
 }))
 
 app.use('/api/blogs', notesRouter)
+
+app.use(errorHandler)
 
 module.exports = app
