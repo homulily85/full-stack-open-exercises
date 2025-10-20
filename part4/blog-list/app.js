@@ -2,9 +2,10 @@ const express = require('express')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
 const config = require('./utils/config')
-const notesRouter = require('./controller/blog')
+const blogsRouter = require('./controller/blog')
+const usersRouter = require('./controller/user')
 const logger = require('./utils/logger')
-const {errorHandler} = require('./utils/middleware')
+const { errorHandler } = require('./utils/middleware')
 
 const app = express()
 
@@ -38,7 +39,8 @@ app.use(morgan('tiny', {
   },
 }))
 
-app.use('/api/blogs', notesRouter)
+app.use('/api/blogs', blogsRouter)
+app.use('/api/users', usersRouter)
 
 app.use(errorHandler)
 
