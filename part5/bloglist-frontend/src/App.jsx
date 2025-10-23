@@ -70,6 +70,10 @@ const App = () => {
     setBlogs(blogs.filter(b => b.id !== blog.id))
   }
 
+  const increaseLike = async (blog) => {
+    await blogService.update(blog)
+  }
+
   return (
     <div>
       <ErrorMessage message={error}></ErrorMessage>
@@ -97,7 +101,8 @@ const App = () => {
             </Togglable>
           )}
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} removeBlog={removeBlog}/>,
+            <Blog key={blog.id} blog={blog} removeBlog={removeBlog}
+                  increaseLike={increaseLike}/>,
           )}
         </>
       )}
