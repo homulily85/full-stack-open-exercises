@@ -15,8 +15,10 @@ const Notification = () => {
     marginBottom: 10,
   }
 
+  const getId = () => (100000 * Math.random()).toFixed(0)
+
   return <>
-    {notification.map(n => <div style={style}>{n}</div>)}
+    {notification.map(n => <div key={getId()} style={style}>{n}</div>)}
   </>
 
 }
