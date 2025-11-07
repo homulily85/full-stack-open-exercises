@@ -13,19 +13,19 @@ const parseArguments = (args: string[]) => {
         throw new Error('Too few arguments');
     }
 
-    const target = Number(args[2])
+    const target = Number(args[2]);
     if (isNaN(target)) {
         throw new Error('Invalid arguments');
     }
 
-    const hours: number[] = []
+    const hours: number[] = [];
 
     for (let i = 3; i < args.length; i++) {
-        let t = Number(args[i])
+        const t = Number(args[i]);
         if (isNaN(t)) {
             throw new Error('Invalid arguments');
         }
-        hours.push(t)
+        hours.push(t);
     }
 
     return {
@@ -33,7 +33,7 @@ const parseArguments = (args: string[]) => {
         hours
     };
 
-}
+};
 
 const calculateExercises = (hours: number[], target: number): Result => {
     return {
@@ -44,8 +44,11 @@ const calculateExercises = (hours: number[], target: number): Result => {
         ratingDescription: 'I like that',
         target: target,
         average: hours.reduce((a, b) => a + b) / hours.length
-    }
+    };
+};
+if (require.main === module) {
+    const {hours, target} = parseArguments(process.argv);
+    console.log(calculateExercises(hours, target));
 }
 
-const {hours, target} = parseArguments(process.argv)
-console.log(calculateExercises(hours, target))
+export default calculateExercises;

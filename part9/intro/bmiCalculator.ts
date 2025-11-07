@@ -18,7 +18,7 @@ const parseArguments = (args: string[]) => {
         weight: Number(args[3])
     };
 
-}
+};
 
 const calculateBmi = (height: number, weight: number) => {
     const bmi = weight / (height / 100 * height / 100);
@@ -27,7 +27,11 @@ const calculateBmi = (height: number, weight: number) => {
     } else if (bmi < 25.0) {
         return 'Normal range';
     } else return 'Overweight';
+};
+
+if (require.main === module) {
+    const {height, weight} = parseArguments(process.argv);
+    console.log(calculateBmi(height, weight));
 }
 
-const {height, weight} = parseArguments(process.argv)
-console.log(calculateBmi(height, weight))
+export default calculateBmi;
