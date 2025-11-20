@@ -1,0 +1,1 @@
+docker start fb5f8f237a8c -inano /usr/src/app/index.jsconsole.log('Hello World')^O ^Xexit
