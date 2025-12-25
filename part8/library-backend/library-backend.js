@@ -125,6 +125,13 @@ const typeDefs =/* GraphQL */ `
 `
 
 const resolvers = {
+    Author: {
+        bookCount: (root) => {
+            return books.filter(
+                book => book.author === root.name).length
+        },
+    },
+
     Query: {
         bookCount: () => books.length,
         authorCount: () => authors.length,
@@ -177,7 +184,7 @@ const resolvers = {
         editAuthor: (root, args) => {
             const authorToSetBorn = authors.find(
                 author => author.name === args.name)
-            if (authorToSetBorn){
+            if (authorToSetBorn) {
                 authorToSetBorn.born = args.setBornTo
             }
             return authorToSetBorn
